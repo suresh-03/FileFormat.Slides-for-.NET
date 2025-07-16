@@ -1,7 +1,4 @@
 ﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using FileFormat.Slides.Common;
 using FileFormat.Slides.Common.Enumerations;
 using FileFormat.Slides.Facade;
@@ -11,12 +8,12 @@ using System.Data;
 using System.Linq;
 
 namespace FileFormat.Slides
-{
+    {
     /// <summary>
     /// Represents the slide object within a presentatction
     /// </summary>
     public class Slide
-    {
+        {
         private SlideFacade _SlideFacade;
         private String _RelationshipId;
         private int _SlideIndex;
@@ -38,7 +35,7 @@ namespace FileFormat.Slides
         private List<Image> _Images;
         private List<Table> _Tables;
         private static String _BackgroundColor = null;
-        private CommentFacade _CommentFacade=null;
+        private CommentFacade _CommentFacade = null;
         private Presentation _SlidePresentation;
         private int _CommentIndex = 0;
         private AnimationType _Animation = AnimationType.None;
@@ -138,7 +135,7 @@ namespace FileFormat.Slides
         /// </summary>
         public List<Pie> Pies { get => _Pies; set => _Pies = value; }
 
-       
+
 
         /// <summary>
         /// Constructor for the Slide class.
@@ -146,10 +143,10 @@ namespace FileFormat.Slides
         /// <remarks>
         ///  it intializes the Slide Facade set the slide index and intializes the lists of text shapes and images.
         /// </remarks>
-        public Slide ()
-        {
-            try
+        public Slide()
             {
+            try
+                {
                 _SlideIndex = Utility.SlideNextIndex;
                 Utility.SlideNextIndex += 1;
                 _SlideFacade = new SlideFacade(true);
@@ -174,20 +171,20 @@ namespace FileFormat.Slides
                 _Tables = new List<Table>();
                 _SlideFacade.BackgroundColor = _BackgroundColor;
                 _CommentFacade = new CommentFacade();
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Initializing slide");
                 throw new Common.FileFormatException(errorMessage, ex);
-            }
+                }
 
-        }
+            }
         /// <summary>
         /// Contructor which accepts bool value 
         /// </summary>
         /// <param name="isNewSlide"></param>
-        public Slide (bool isNewSlide)
-        {
+        public Slide(bool isNewSlide)
+            {
             if (isNewSlide)
                 _SlideFacade = new SlideFacade(true);
             else
@@ -213,60 +210,60 @@ namespace FileFormat.Slides
             _Images = new List<Image>();
             _Tables = new List<Table>();
             _CommentFacade = new CommentFacade();
-        }
+            }
         /// <summary>
         /// Method to add a text shape in a slide.
         /// </summary>
         /// <param name="textShape">An object of TextShape class.</param>
-        public void AddTextShapes (TextShape textShape)
-        {
-            try
+        public void AddTextShapes(TextShape textShape)
             {
+            try
+                {
                 if (textShape.TextList == null)
-                {
-                    textShape.Facade = _SlideFacade.AddTextShape(textShape.Text, textShape.FontSize, TextAlignment.Center,
+                    {
+                    textShape.Facade = _SlideFacade.AddTextShape(textShape.Text, textShape.FontSize, textShape.Alignment, textShape.Anchor,
                         Utility.PixelsToEmu(textShape.X), Utility.PixelsToEmu(textShape.Y)
                         , Utility.PixelsToEmu(textShape.Width), Utility.PixelsToEmu(textShape.Height), textShape.FontFamily,
                         textShape.TextColor, textShape.BackgroundColor);
-                }
+                    }
                 else
-                {
-                    textShape.Facade = _SlideFacade.AddTextListShape(textShape.TextList.ListItems, textShape.TextList.Facade, textShape.FontSize, TextAlignment.Center,
+                    {
+                    textShape.Facade = _SlideFacade.AddTextListShape(textShape.TextList.ListItems, textShape.TextList.Facade, textShape.FontSize, textShape.Alignment, textShape.Anchor,
                         Utility.PixelsToEmu(textShape.X), Utility.PixelsToEmu(textShape.Y)
                         , Utility.PixelsToEmu(textShape.Width), Utility.PixelsToEmu(textShape.Height), textShape.FontFamily,
                         textShape.TextColor, textShape.BackgroundColor);
-                }
+                    }
                 textShape.ShapeIndex = _TextShapes.Count + 1;
                 _TextShapes.Add(textShape);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding text shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
         /// <summary>
         /// Method to draw a rectangular shape
         /// </summary>
         /// <param name="rect"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawRectangle(Rectangle rect)
-        {
-            try
             {
+            try
+                {
                 var facade = new RectangleShapeFacade();
                 facade.BackgroundColor = rect.BackgroundColor;
                 rect.Facade = _SlideFacade.DrawRectangle(Utility.PixelsToEmu(rect.X), Utility.PixelsToEmu(rect.Y),
                     Utility.PixelsToEmu(rect.Width), Utility.PixelsToEmu(rect.Height), facade.BackgroundColor, facade);
                 rect.ShapeIndex = _Rectangles.Count + 1;
                 _Rectangles.Add(rect);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding rectangular shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw a triangular shape
@@ -274,22 +271,22 @@ namespace FileFormat.Slides
         /// <param name="triangle"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawTriangle(Triangle triangle)
-        {
-            try
             {
+            try
+                {
                 var facade = new TriangleShapeFacade();
                 facade.BackgroundColor = triangle.BackgroundColor;
                 triangle.Facade = _SlideFacade.DrawTriangle(Utility.PixelsToEmu(triangle.X), Utility.PixelsToEmu(triangle.Y),
                     Utility.PixelsToEmu(triangle.Width), Utility.PixelsToEmu(triangle.Height), facade.BackgroundColor, facade);
                 triangle.ShapeIndex = _Triangles.Count + 1;
                 _Triangles.Add(triangle);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding triangular shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw a diamond shape
@@ -297,22 +294,22 @@ namespace FileFormat.Slides
         /// <param name="diamond"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawDiamond(Diamond diamond)
-        {
-            try
             {
+            try
+                {
                 var facade = new DiamondShapeFacade();
                 facade.BackgroundColor = diamond.BackgroundColor;
                 diamond.Facade = _SlideFacade.DrawDiamond(Utility.PixelsToEmu(diamond.X), Utility.PixelsToEmu(diamond.Y),
                     Utility.PixelsToEmu(diamond.Width), Utility.PixelsToEmu(diamond.Height), facade.BackgroundColor, facade);
                 diamond.ShapeIndex = _Diamonds.Count + 1;
                 _Diamonds.Add(diamond);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding diamond shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw a line shape
@@ -320,21 +317,21 @@ namespace FileFormat.Slides
         /// <param name="line"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawLine(Line line)
-        {
-            try
             {
+            try
+                {
                 var facade = new LineFacade();
                 line.Facade = _SlideFacade.DrawLine(Utility.PixelsToEmu(line.X), Utility.PixelsToEmu(line.Y),
                     Utility.PixelsToEmu(line.Width), Utility.PixelsToEmu(line.Height), facade);
                 line.ShapeIndex = _Lines.Count + 1;
                 _Lines.Add(line);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding line shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw a curved line
@@ -342,21 +339,21 @@ namespace FileFormat.Slides
         /// <param name="curvedLine"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawCurvedLine(CurvedLine curvedLine)
-        {
-            try
             {
+            try
+                {
                 var facade = new CurvedLineFacade();
                 curvedLine.Facade = _SlideFacade.DrawCurvedLine(Utility.PixelsToEmu(curvedLine.X), Utility.PixelsToEmu(curvedLine.Y),
                     Utility.PixelsToEmu(curvedLine.Width), Utility.PixelsToEmu(curvedLine.Height), facade);
                 curvedLine.ShapeIndex = _CurvedLines.Count + 1;
                 _CurvedLines.Add(curvedLine);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding curved line shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw an arrow shape
@@ -364,22 +361,22 @@ namespace FileFormat.Slides
         /// <param name="arrow"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawArrow(Arrow arrow)
-        {
-            try
             {
+            try
+                {
                 var facade = new ArrowFacade();
                 facade.Animation = arrow.Animation;
                 arrow.Facade = _SlideFacade.DrawArrow(Utility.PixelsToEmu(arrow.X), Utility.PixelsToEmu(arrow.Y),
                     Utility.PixelsToEmu(arrow.Width), Utility.PixelsToEmu(arrow.Height), facade);
                 arrow.ShapeIndex = _Arrows.Count + 1;
                 _Arrows.Add(arrow);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding arrow shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw a double arrow shape
@@ -387,22 +384,22 @@ namespace FileFormat.Slides
         /// <param name="doubleArrow"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawDoubleArrow(DoubleArrow doubleArrow)
-        {
-            try
             {
+            try
+                {
                 var facade = new DoubleArrowFacade();
                 facade.Animation = doubleArrow.Animation;
                 doubleArrow.Facade = _SlideFacade.DrawDoubleArrow(Utility.PixelsToEmu(doubleArrow.X), Utility.PixelsToEmu(doubleArrow.Y),
                     Utility.PixelsToEmu(doubleArrow.Width), Utility.PixelsToEmu(doubleArrow.Height), facade);
                 doubleArrow.ShapeIndex = _DoubleArrows.Count + 1;
                 _DoubleArrows.Add(doubleArrow);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding double arrow shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw a double brace shape
@@ -410,22 +407,22 @@ namespace FileFormat.Slides
         /// <param name="doubleBrace"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawDoubleBrace(DoubleBrace doubleBrace)
-        {
-            try
             {
+            try
+                {
                 var facade = new DoubleBraceFacade();
                 facade.Animation = doubleBrace.Animation;
                 doubleBrace.Facade = _SlideFacade.DrawDoubleBrace(Utility.PixelsToEmu(doubleBrace.X), Utility.PixelsToEmu(doubleBrace.Y),
                     Utility.PixelsToEmu(doubleBrace.Width), Utility.PixelsToEmu(doubleBrace.Height), facade);
                 doubleBrace.ShapeIndex = _DoubleBraces.Count + 1;
                 _DoubleBraces.Add(doubleBrace);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding double brace shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw a double bracket shape
@@ -433,22 +430,22 @@ namespace FileFormat.Slides
         /// <param name="doubleBracket"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawDoubleBracket(DoubleBracket doubleBracket)
-        {
-            try
             {
+            try
+                {
                 var facade = new DoubleBracketFacade();
-                facade.Animation= doubleBracket.Animation;
+                facade.Animation = doubleBracket.Animation;
                 doubleBracket.Facade = _SlideFacade.DrawDoubleBracket(Utility.PixelsToEmu(doubleBracket.X), Utility.PixelsToEmu(doubleBracket.Y),
                     Utility.PixelsToEmu(doubleBracket.Width), Utility.PixelsToEmu(doubleBracket.Height), facade);
                 doubleBracket.ShapeIndex = _DoubleBrackets.Count + 1;
                 _DoubleBrackets.Add(doubleBracket);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding double bracket shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw a pentagon shape
@@ -456,22 +453,22 @@ namespace FileFormat.Slides
         /// <param name="pentagon"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawPentagon(Pentagon pentagon)
-        {
-            try
             {
+            try
+                {
                 var facade = new PentagonFacade();
-                facade.Animation= pentagon.Animation;
+                facade.Animation = pentagon.Animation;
                 pentagon.Facade = _SlideFacade.DrawPentagon(Utility.PixelsToEmu(pentagon.X), Utility.PixelsToEmu(pentagon.Y),
                     Utility.PixelsToEmu(pentagon.Width), Utility.PixelsToEmu(pentagon.Height), facade);
                 pentagon.ShapeIndex = _Pentagons.Count + 1;
                 _Pentagons.Add(pentagon);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding pentagon shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw a hexagon shape
@@ -479,22 +476,22 @@ namespace FileFormat.Slides
         /// <param name="hexagon"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawHexagon(Hexagon hexagon)
-        {
-            try
             {
+            try
+                {
                 var facade = new HexagonFacade();
                 facade.Animation = hexagon.Animation;
                 hexagon.Facade = _SlideFacade.DrawHexagon(Utility.PixelsToEmu(hexagon.X), Utility.PixelsToEmu(hexagon.Y),
                     Utility.PixelsToEmu(hexagon.Width), Utility.PixelsToEmu(hexagon.Height), facade);
                 hexagon.ShapeIndex = _Hexagons.Count + 1;
                 _Hexagons.Add(hexagon);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding hexagon shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to draw a trapezoid shape
@@ -502,108 +499,108 @@ namespace FileFormat.Slides
         /// <param name="trapezoid"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawTrapezoid(Trapezoid trapezoid)
-        {
-            try
             {
+            try
+                {
                 var facade = new TrapezoidFacade();
-                facade.Animation= trapezoid.Animation;
+                facade.Animation = trapezoid.Animation;
                 trapezoid.Facade = _SlideFacade.DrawTrapezoid(Utility.PixelsToEmu(trapezoid.X), Utility.PixelsToEmu(trapezoid.Y),
                     Utility.PixelsToEmu(trapezoid.Width), Utility.PixelsToEmu(trapezoid.Height), facade);
                 trapezoid.ShapeIndex = _Trapezoids.Count + 1;
                 _Trapezoids.Add(trapezoid);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding trapezoid shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         public void DrawPie(Pie pie)
-        {
-            try
             {
-                var Facade= new PieFacade();
-                Facade.Animation= pie.Animation;
-               pie.Facade = _SlideFacade.DrawPie(Utility.PixelsToEmu(pie.X), Utility.PixelsToEmu(pie.Y),
-                   Utility.PixelsToEmu(pie.Width), Utility.PixelsToEmu(pie.Height), Facade);
+            try
+                {
+                var Facade = new PieFacade();
+                Facade.Animation = pie.Animation;
+                pie.Facade = _SlideFacade.DrawPie(Utility.PixelsToEmu(pie.X), Utility.PixelsToEmu(pie.Y),
+                    Utility.PixelsToEmu(pie.Width), Utility.PixelsToEmu(pie.Height), Facade);
                 pie.ShapeIndex = _Pies.Count + 1;
                 Pies.Add(pie);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding text shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
         /// <summary>
         /// Method to draw a circular shape
         /// </summary>
         /// <param name="circle"></param>
         /// <exception cref="Common.FileFormatException"></exception>
         public void DrawCircle(Circle circle)
-        {
-            try
             {
+            try
+                {
                 var facade = new CircleShapeFacade();
-                facade.Animation= circle.Animation;
+                facade.Animation = circle.Animation;
                 facade.BackgroundColor = circle.BackgroundColor;
                 circle.Facade = _SlideFacade.DrawCircle(Utility.PixelsToEmu(circle.X), Utility.PixelsToEmu(circle.Y),
                     Utility.PixelsToEmu(circle.Width), Utility.PixelsToEmu(circle.Height), facade.BackgroundColor, facade);
                 circle.ShapeIndex = _Circles.Count + 1;
                 _Circles.Add(circle);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding circular shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
 
         /// <summary>
         /// Method to add/update note to a slide
         /// </summary>
         /// <param name="noteText">Text you want to add as note</param>
         public void AddNote(String noteText)
-        {
+            {
             _SlideFacade.AddNote(noteText);
-        }
+            }
         /// <summary>
         /// Method to remove Notes of a slide
         /// </summary>
         public void RemoveNote()
-        {
-            _SlideFacade.RemoveNote();
-        }
-        public void AddTextShapes (TextShape textShape, List<TextSegment> textSegments)
-        {
-            try
             {
+            _SlideFacade.RemoveNote();
+            }
+        public void AddTextShapes(TextShape textShape, List<TextSegment> textSegments)
+            {
+            try
+                {
                 List<TextSegmentFacade> textSegmentFacades = new List<TextSegmentFacade>();
                 foreach (var ts in textSegments)
-                {
+                    {
                     textSegmentFacades.Add(ts.Facade);
-                }
-                textShape.Facade = _SlideFacade.AddTextShape(textSegmentFacades, TextAlignment.Center,
+                    }
+                textShape.Facade = _SlideFacade.AddTextShape(textSegmentFacades, textShape.Alignment, textShape.Anchor,
                     Utility.PixelsToEmu(textShape.X), Utility.PixelsToEmu(textShape.Y)
                     , Utility.PixelsToEmu(textShape.Width), Utility.PixelsToEmu(textShape.Height), textShape.BackgroundColor);
                 textShape.ShapeIndex = _TextShapes.Count + 1;
                 _TextShapes.Add(textShape);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding text shape");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
         /// <summary>
         /// Method to add images to a slide. 
         /// </summary>
         /// <param name="image">An object of Image class</param>
-        public void AddImage (Image image)
-        {
-            try
+        public void AddImage(Image image)
             {
+            try
+                {
                 image.Facade = new ImageFacade();
                 image.Facade.X = Utility.PixelsToEmu(image.X);
                 image.Facade.Y = Utility.PixelsToEmu(image.Y);
@@ -613,52 +610,52 @@ namespace FileFormat.Slides
                 _SlideFacade.AddImage(image.Facade);
                 image.ImageIndex = _Images.Count + 1;
                 _Images.Add(image);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding image");
                 throw new Common.FileFormatException(errorMessage, ex);
-            }
+                }
 
-        }
+            }
         /// <summary>
         /// Method to add comments to a slide. 
         /// </summary>
         /// <param name="comment">An object of Comment class</param>
         public void AddComment(Comment comment)
-        {
-            try
             {
+            try
+                {
                 comment.Facade = _CommentFacade;
                 if (_CommentIndex == 0)
-                {                    
+                    {
                     comment.Facade.SetAssociatedSlidePart(_SlideFacade.SlidePart, _SlidePresentation.Facade.CommentAuthorPart);
-                }
+                    }
                 UInt32Value id = new UInt32Value { Value = (uint)comment.AuthorId };
-                comment.Facade.GenerateComment(id,comment.Text, comment.InsertedAt, comment.X, comment.Y);
+                comment.Facade.GenerateComment(id, comment.Text, comment.InsertedAt, comment.X, comment.Y);
                 _CommentIndex += 1;
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding Comment");
                 throw new Common.FileFormatException(errorMessage, ex);
-            }
+                }
 
-        }
+            }
         /// <summary>
         /// Method to get the list of comments.
         /// </summary>
         /// <returns></returns>
         public List<Comment> GetComments()
-        {
-            var comments= new List<Comment>();
-            var facadeComments= _SlideFacade.GetComments();
-            foreach (var facadeComment in facadeComments)
             {
+            var comments = new List<Comment>();
+            var facadeComments = _SlideFacade.GetComments();
+            foreach (var facadeComment in facadeComments)
+                {
                 Comment comment = new Comment();
                 comment.Text = facadeComment["Text"];
                 comment.AuthorId = Convert.ToInt32(facadeComment["AuthorId"]);
-                comment.CommentIndex= Convert.ToInt32(facadeComment["Index"]);
+                comment.CommentIndex = Convert.ToInt32(facadeComment["Index"]);
                 comment.InsertedAt = Convert.ToDateTime(facadeComment["DateTime"]);
                 comment.X = Convert.ToInt64(facadeComment["XPos"]);
                 comment.Y = Convert.ToInt64(facadeComment["YPos"]);
@@ -666,66 +663,66 @@ namespace FileFormat.Slides
                 comment.Facade.CommentPart = _SlideFacade.CommentPart;
 
                 comments.Add(comment);
-            }
+                }
             return comments;
-        }
+            }
         /// <summary>
         /// Method to add table to a slide. 
         /// </summary>
         /// <param name="table">An object of Table class</param>
-        public void AddTable (Table table)
-        {
-            try
+        public void AddTable(Table table)
             {
+            try
+                {
                 table.Facade = new TableFacade();
                 table.Facade.X = Utility.PixelsToEmu(table.X);
                 table.Facade.Y = Utility.PixelsToEmu(table.Y);
                 table.Facade.Width = Utility.PixelsToEmu(table.Width);
                 table.Facade.Height = Utility.PixelsToEmu(table.Height);
                 if (table.Theme == null)
-                {
+                    {
                     table.Theme = Table.TableStyle.LightStyle1;
-                }
-                
+                    }
+
                 table.Facade.GenerateTable(_SlideFacade.SlidePart, table.GetDataTable());
                 table.TableIndex = _Tables.Count + 1;
                 _Tables.Add(table);
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Adding table");
                 throw new Common.FileFormatException(errorMessage, ex);
-            }
+                }
 
-        }        
+            }
 
         /// <summary>
         /// Get text shapes by searching a text term.
         /// </summary>
         /// <param name="text">Search term as string</param>
         /// <returns></returns>
-        public List<TextShape> GetTextShapesByText (String text)
-        {
-            try
+        public List<TextShape> GetTextShapesByText(String text)
             {
+            try
+                {
                 List<TextShape> shapes = TextShapes.Where(shape => shape.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
                 return shapes;
-            }
+                }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Getting Shapes");
                 throw new Common.FileFormatException(errorMessage, ex);
+                }
             }
-        }
-        
+
         /// <summary>
         /// Method to update a slide properties e.g. background color.
         /// </summary>
-        public void Update ()
-        {
+        public void Update()
+            {
             _SlideFacade.BackgroundColor = _BackgroundColor;
             _SlideFacade.Update();
-        }
+            }
 
+        }
     }
-}

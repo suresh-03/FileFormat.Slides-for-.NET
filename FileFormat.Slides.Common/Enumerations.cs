@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FileFormat.Slides.Common.Enumerations
-{
+﻿namespace FileFormat.Slides.Common.Enumerations
+    {
     /// <summary>
     /// Specifies the alignment of text elements.
     /// </summary>
     public enum TextAlignment
-    {
+        {
         Left,
         Right,
         Center,
         None
-    }
+        }
     /// <summary>
     /// Specifies the type of styled list
     /// </summary>
     public enum ListType
-    {
+        {
         Bulleted,
         Numbered
-    }
+        }
     public enum AnimationType
-    {
+        {
         None,             // No animation
         Fade,             // Fade in or out
         Wipe,             // Wipe across the screen
@@ -42,6 +38,15 @@ namespace FileFormat.Slides.Common.Enumerations
         Wheel,            // Wheel animation
         Float,            // Float in or out
         Custom            // Custom animation defined by the user
-    }
+        }
 
-}
+    public enum TextAnchor
+        {
+        Center,
+        Top,
+        Bottom,
+        None
+        }
+
+
+    }

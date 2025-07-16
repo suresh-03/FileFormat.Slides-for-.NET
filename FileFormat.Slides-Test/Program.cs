@@ -1,81 +1,91 @@
-﻿using DocumentFormat.OpenXml;
-using PKG = DocumentFormat.OpenXml.Packaging;
-using P = DocumentFormat.OpenXml.Presentation;
-using System;
-using GeneratedCode;
+﻿
 using FileFormat.Slides;
-using System.Collections.Generic;
 using FileFormat.Slides.Common;
-//using DocumentFormat.OpenXml.Presentation;
+using System.Collections.Generic;
+
 
 
 
 class Program
-{
-    static void Main()
     {
-        /* Create new Presentation
-         Presentation presentation = Presentation.Create("D:\\AsposeSampleResults\\test2.pptx");
-         TextShape shape = new TextShape();
-         shape.Text = "Title: Here is my first title From FF";
-         shape.TextColor = "980078";
-         shape.FontFamily = "Baguet Script";
-         TextShape shape2 = new TextShape();
-         shape2.Text = "Body : Here is my first title From FF";
-         shape2.FontFamily = "BIZ UDGothic";
-         shape2.FontSize = 3000;
-         shape2.Y = Utility.EmuToPixels(2499619);
-         // First slide
-         Slide slide = new Slide();
-         slide.AddTextShapes(shape);
-         slide.AddTextShapes(shape2);
-         // 2nd slide
-         Slide slide1 = new Slide();
-         slide1.AddTextShapes(shape);
-         slide1.AddTextShapes(shape2);
-         // Adding slides
-         presentation.AppendSlide(slide);
-         presentation.AppendSlide(slide1);
-         presentation.Save();*/
+    public const string PPT_FILE_PATH = Constants.OUTPUT_DIR + Constants.PPT_FILE;
+    static void Main()
+        {
+        /* Create new Presentation*/
         /*
-        Presentation presentation = Presentation.Create("D:\\AsposeSampleResults\\test2.pptx");
+        Presentation presentation = Presentation.Create(PPT_FILE_PATH);
+        TextShape shape = new TextShape();
+        shape.Text = "Title: Here is my first title From FF";
+        shape.TextColor = "980078";
+        shape.FontFamily = "Baguet Script";
+        shape.Alignment = FileFormat.Slides.Common.Enumerations.TextAlignment.Left;
+        shape.Anchor = FileFormat.Slides.Common.Enumerations.TextAnchor.Top;
+        TextShape shape2 = new TextShape();
+        shape2.Text = "Body : Here is my first title From FF";
+        shape2.FontFamily = "BIZ UDGothic";
+        shape2.FontSize = 30;
+        shape2.Alignment = FileFormat.Slides.Common.Enumerations.TextAlignment.Right;
+        shape2.Y = FileFormat.Slides.Common.Utility.EmuToPixels(2499619);
+        shape2.Anchor = FileFormat.Slides.Common.Enumerations.TextAnchor.Bottom;
+
+        // First slide
+        Slide slide = new Slide();
+        slide.AddTextShapes(shape);
+        slide.AddTextShapes(shape2);
+        // 2nd slide
+        Slide slide1 = new Slide();
+        slide1.AddTextShapes(shape);
+        slide1.AddTextShapes(shape2);
+        // Adding slides
+        presentation.AppendSlide(slide);
+        presentation.AppendSlide(slide1);
+        presentation.Save();
+        */
+        /*
+        Presentation presentation = Presentation.Create(PPT_FILE_PATH);
         TextShape shape = new TextShape();
         shape.Text = "Title: Here is my first title From FF";
         shape.BackgroundColor = "5f7200";
+        shape.Alignment = FileFormat.Slides.Common.Enumerations.TextAlignment.Left;
+        shape.Anchor = FileFormat.Slides.Common.Enumerations.TextAnchor.Top;
         shape.FontSize = 80;
-        shape.TextColor = "980078";
+        shape.TextColor = "ffffff";
         shape.FontFamily = "Baguet Script";
         TextShape shape2 = new TextShape();
 
         shape2.BackgroundColor = "ff7f90";
         List<TextSegment> TextSegments = new List<TextSegment>();
-        TextSegments.Add(new TextSegment{Color= "980078", FontSize = 70, FontFamily = "Calibri", Text = "Body:" }.create());
-        TextSegments.Add(new TextSegment{ Color = "000000", FontSize = 32, FontFamily = "Baguet Script", Text = " Here is my text Segment" }.create());
-        
+        TextSegments.Add(new TextSegment { Color = "980078", FontSize = 70, FontFamily = "Calibri", Text = "Body:" }.create());
+        TextSegments.Add(new TextSegment { Color = "ffffff", FontSize = 32, FontFamily = "Baguet Script", Text = " Here is my text Segment" }.create());
+
         shape2.Y = Utility.EmuToPixels(3499619);
+        shape2.Alignment = FileFormat.Slides.Common.Enumerations.TextAlignment.Right;
+        shape2.Anchor = FileFormat.Slides.Common.Enumerations.TextAnchor.Bottom;
         // First slide
         Slide slide = new Slide();
         slide.AddTextShapes(shape);
         slide.AddTextShapes(shape2, TextSegments);
-        
+
         // Adding slides
         presentation.AppendSlide(slide);
-        
-        presentation.Save();*/
 
-        /* Open and update a PPTX file
-        Presentation presentation = Presentation.Open("D:\\AsposeSampleData\\sample.pptx");
-        var slides = presentation.GetSlides();
-        var slide = slides[3];
-        List<TextShape> shapes = slide.GetTextShapesByText("PRESENTATION");
-        var shape = slide.TextShapes[1];
-        //shape.X = 100000;
-        //shape.Y = 100000;
-        shape.Alignment= FileFormat.Slides.Common.Enumerations.TextAlignment.Left;
-        shape.Text = "Muhammad Umar";
-        shape.Update();
         presentation.Save();
         */
+
+        ///* 
+        //Open and update a PPTX file
+        Presentation presentation = Presentation.Open(PPT_FILE_PATH);
+        var slides = presentation.GetSlides();
+        var slide = slides[0];
+        List<TextShape> shapes = slide.GetTextShapesByText("PRESENTATION");
+        var shape = slide.TextShapes[0];
+        //shape.X = 100000;
+        //shape.Y = 100000;
+        shape.Alignment = FileFormat.Slides.Common.Enumerations.TextAlignment.Center;
+        shape.Text = "Test Update Text";
+        shape.Update();
+        presentation.Save();
+        //*/
 
         /* 
          * Remove a slide from presentation.
@@ -523,32 +533,32 @@ class Program
          presentation.AppendSlide(slide);
          presentation.Save();*/
 
-        Presentation presentation = Presentation.Open("D:\\AsposeSampleData\\draw.pptx");
+        //Presentation presentation = Presentation.Open("D:\\AsposeSampleData\\draw.pptx");
+        //Slide slide = new Slide();
+
+        //Trapezoid trapezoid = new Trapezoid();
+        //trapezoid.Animation = FileFormat.Slides.Common.Enumerations.AnimationType.FlyIn;
+        //trapezoid.Width = 300.0;
+        //trapezoid.Height = 300.0;
+        //trapezoid.X = 300.0;
+        //trapezoid.Y = 300.0;
+        //slide.DrawTrapezoid(trapezoid);
+        //presentation.AppendSlide(slide);
+        //presentation.Save();
+
+        /* Presentation presentation = Presentation.Open("D:\\AsposeSampleData\\draw.pptx");
          Slide slide = new Slide();
 
-         Trapezoid trapezoid = new Trapezoid();
-        trapezoid.Animation = FileFormat.Slides.Common.Enumerations.AnimationType.FlyIn;
-         trapezoid.Width = 300.0;
-         trapezoid.Height = 300.0;
-         trapezoid.X = 300.0;
-         trapezoid.Y = 300.0;
-         slide.DrawTrapezoid(trapezoid);
+         Pie pie = new Pie();
+         pie.Animation = FileFormat.Slides.Common.Enumerations.AnimationType.FlyIn;
+         pie.Width = 300.0;
+         pie.Height = 300.0;
+         pie.X = 300.0;
+         pie.Y = 300.0;
+         slide.DrawPie(pie);
          presentation.AppendSlide(slide);
-         presentation.Save();
-        
-       /* Presentation presentation = Presentation.Open("D:\\AsposeSampleData\\draw.pptx");
-        Slide slide = new Slide();
-        
-        Pie pie = new Pie();
-        pie.Animation = FileFormat.Slides.Common.Enumerations.AnimationType.FlyIn;
-        pie.Width = 300.0;
-        pie.Height = 300.0;
-        pie.X = 300.0;
-        pie.Y = 300.0;
-        slide.DrawPie(pie);
-        presentation.AppendSlide(slide);
-        presentation.Save();*/
+         presentation.Save();*/
+
+        }
 
     }
-
-}

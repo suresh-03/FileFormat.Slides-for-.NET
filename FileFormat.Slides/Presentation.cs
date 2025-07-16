@@ -1,21 +1,20 @@
 ﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Presentation;
 using FileFormat.Slides.Facade;
 using System;
 using System.Collections.Generic;
 
 namespace FileFormat.Slides
-{
+    {
     /// <summary>
     /// Represents the presentation document.
     /// </summary>
     public class Presentation
-    {
+        {
         private static String _FileName = "MyPresentation.pptx";
         private static String _DirectoryPath = "D:\\AsposeSampleResults\\";
         private static PresentationDocumentFacade doc = null;
         private List<Slide> _Slides = null;
-        private List<CommentAuthor> _CommentAuthors=null;
+        private List<CommentAuthor> _CommentAuthors = null;
         private int _SlideWidth = 960;
         private int _SlideHeight = 720;
 
@@ -36,24 +35,24 @@ namespace FileFormat.Slides
         /// Initializes the presentation object.
         /// </summary>
         /// <param name="FilePath">Presentation path as string</param>
-        private Presentation (String FilePath)
-        {
-            
+        private Presentation(String FilePath)
+            {
+
             _Slides = new List<Slide>();
             _CommentAuthors = new List<CommentAuthor>();
             doc = PresentationDocumentFacade.Create(FilePath);
-            
 
-        }
+
+            }
         /// <summary>
         /// Default constructor to initialize presentation object.
         /// </summary>
-        private Presentation ()
-        {
+        private Presentation()
+            {
             _Slides = new List<Slide>();
             _CommentAuthors = new List<CommentAuthor>();
 
-        }
+            }
         /// <summary>
         /// Static method to instantiate a new object of Presentation class.
         /// </summary>
@@ -82,10 +81,10 @@ namespace FileFormat.Slides
         /// presentation.Save();
         /// </code>
         /// </example>
-        public static Presentation Create (String FilePath)
-        {
+        public static Presentation Create(String FilePath)
+            {
             return new Presentation(FilePath);
-        }
+            }
         /// <summary>
         /// Static method to load an existing presentation.
         /// </summary>
@@ -107,52 +106,52 @@ namespace FileFormat.Slides
         /// presentation.Save();
         /// </code>
         /// </example>
-        public static Presentation Open (String FilePath)
-        {
+        public static Presentation Open(String FilePath)
+            {
             doc = PresentationDocumentFacade.Open(FilePath);
             return new Presentation();
-        }
+            }
         /// <summary>
         /// Create comment author using this method
         /// </summary>
         /// <param name="author"> Pass comment author object</param>
         public void CreateAuthor(CommentAuthor author)
-        {
+            {
             doc.CreateAuthor(author.Id, author.ColorIndex, author.Name, author.InitialLetter);
             _CommentAuthors.Add(author);
-        }
+            }
         /// <summary>
         /// Get the list of comment author
         /// </summary>
         /// <returns></returns>
         public List<CommentAuthor> GetCommentAuthors()
-        {
-            List<CommentAuthor > authorList = new List<CommentAuthor>();
-            var FacadeAuthors = doc.GetCommentAuthors();
-            foreach(var author in FacadeAuthors)
             {
+            List<CommentAuthor> authorList = new List<CommentAuthor>();
+            var FacadeAuthors = doc.GetCommentAuthors();
+            foreach (var author in FacadeAuthors)
+                {
                 CommentAuthor commentAuthor = new CommentAuthor();
                 commentAuthor.InitialLetter = author["Initials"];
                 commentAuthor.ColorIndex = Convert.ToInt32(author["ColorIndex"]);
                 commentAuthor.Name = author["Name"];
-                commentAuthor.Id = Convert.ToInt32(author["Id"]);  
+                commentAuthor.Id = Convert.ToInt32(author["Id"]);
                 authorList.Add(commentAuthor);
-            }
+                }
             return authorList;
-        }
+            }
         /// <summary>
         /// This method is responsible to append a slide.
         /// </summary>
         /// <param name="slide">An object of a slide</param>
-        public void AppendSlide (Slide slide)
-        {
+        public void AppendSlide(Slide slide)
+            {
             slide.SlideFacade.SetSlideBackground(slide.BackgroundColor);
             doc.SlideWidth = new Int32Value((int)Common.Utility.PixelsToEmu(SlideWidth));
             doc.SlideHeight = new Int32Value((int)Common.Utility.PixelsToEmu(SlideHeight));
             doc.AppendSlide(slide.SlideFacade);
             _Slides.Add(slide);
 
-        }
+            }
         /// <summary>
         /// Method to get the list of all slides of a presentation
         /// </summary>
@@ -165,20 +164,21 @@ namespace FileFormat.Slides
         /// ...
         /// </code>
         /// </example>
-        public List<Slide> GetSlides ()
-        {
-            if (!doc.IsNewPresentation)
+        public List<Slide> GetSlides()
             {
-                foreach (var slidepart in doc.PresentationSlideParts)
+            if (!doc.IsNewPresentation)
                 {
+                foreach (var slidepart in doc.PresentationSlideParts)
+                    {
                     var slide = new Slide(false);
-                    
+
                     SlideFacade slideFacade = new SlideFacade(false);
                     slideFacade.TextShapeFacades = TextShapeFacade.PopulateTextShapes(slidepart);
                     slideFacade.RectangleShapeFacades = RectangleShapeFacade.PopulateRectangleShapes(slidepart);
+                    slideFacade.CircleShapeFacades = CircleShapeFacade.PopulateCircleShapes(slidepart);
                     slideFacade.ImagesFacade = ImageFacade.PopulateImages(slidepart);
                     slideFacade.PresentationSlide = slidepart.Slide;
-                    slideFacade.TableFacades= TableFacade.PopulateTables(slidepart);
+                    slideFacade.TableFacades = TableFacade.PopulateTables(slidepart);
                     slideFacade.SlidePart = slidepart;
                     slideFacade.CommentPart = slidepart.SlideCommentsPart;
                     slideFacade.NotesPart = slidepart.NotesSlidePart;
@@ -191,19 +191,19 @@ namespace FileFormat.Slides
                     slide.SlideFacade = slideFacade;
                     slide.SlidePresentation = this;
                     _Slides.Add(slide);
+                    }
                 }
-            }
             return _Slides;
 
-        }
+            }
         /// <summary>
         /// Extract and save images of a presentation into a director
         /// </summary>
         /// <param name="outputFolder">Folder path as string</param>
-        public void ExtractAndSaveImages (string outputFolder)
-        {
+        public void ExtractAndSaveImages(string outputFolder)
+            {
             doc.ExtractAndSaveImages(outputFolder);
-        }
+            }
         /// <summary>
         /// Method to remove a slide at a specific index
         /// </summary>
@@ -216,53 +216,53 @@ namespace FileFormat.Slides
         /// presentation.Save();
         /// </code>
         /// </example>
-        public String RemoveSlide (int slideIndex)
-        {
+        public String RemoveSlide(int slideIndex)
+            {
             return doc.RemoveSlide(slideIndex);
-        }
+            }
         /// <summary>
         /// Method to remove comment author.
         /// </summary>
         /// <param name="author"></param>
         public void RemoveCommentAuthor(CommentAuthor author)
-        {
+            {
             doc.RemoveCommentAuthor(author.Id);
             _CommentAuthors.Remove(author);
-        }
+            }
         /// <summary>
         /// Method to insert a slide at a specific index
         /// </summary>
         /// <param name="index">Index of a slide</param>
         /// <param name="slide">A slide object</param>
-        public void InsertSlideAt (int index, Slide slide)
-        {
+        public void InsertSlideAt(int index, Slide slide)
+            {
             slide.SlideIndex = index;
             slide.SlideFacade.SlideIndex = index;
             doc.InsertSlide(index, slide.SlideFacade);
-        }
+            }
 
         /// <summary>
         /// This method exports all existing notes of a PPT/PPTX to TXT file.
         /// </summary>
         /// <param name="filePath"> File path where to save TXT file</param>
         public void SaveAllNotesToTextFile(string filePath)
-        {
+            {
             doc.SaveAllNotesToTextFile(filePath);
-        }
+            }
         /// <summary>
         /// Method to save the new or changed presentation.
         /// </summary>
-        public void Save ()
-        {
-            doc.Save();           
+        public void Save()
+            {
+            doc.Save();
 
-        }
+            }
         /// <summary>
         /// Method to close a presentation.
         /// </summary>
         public void close()
-        {
+            {
             doc.Dispose();
+            }
         }
     }
-}

@@ -5,15 +5,16 @@ using System;
 using System.Collections.Generic;
 
 namespace FileFormat.Slides
-{
+    {
     /// <summary>
     /// This class represents the text shape within a slide.
     /// </summary>
     public class TextShape
-    {
+        {
         private String _Text;
         private Int32 _FontSize;
         private TextAlignment _Alignment = TextAlignment.None;
+        private TextAnchor _Anchor = TextAnchor.None;
         private double _x;
         private double _y;
         private double _Width;
@@ -37,6 +38,10 @@ namespace FileFormat.Slides
         /// Property to get or set alignment of the shape.
         /// </summary>
         public TextAlignment Alignment { get => _Alignment; set => _Alignment = value; }
+        /// <summary>
+        /// Property to get or set anchor of the shape.
+        /// </summary>
+        public TextAnchor Anchor { get => _Anchor; set => _Anchor = value; }
         /// <summary>
         /// Property to get or set X coordinate of the shape
         /// </summary>
@@ -87,8 +92,8 @@ namespace FileFormat.Slides
         /// <summary>
         /// Constructor of the TextShape class inititalizes the object of TextShapeFacade and populate its fields.
         /// </summary>
-        public TextShape ()
-        {
+        public TextShape()
+            {
             _Facade = new TextShapeFacade();
             _Facade.ShapeIndex = _shapeIndex;
             _Text = "Default Text";
@@ -97,30 +102,32 @@ namespace FileFormat.Slides
             _TextColor = "000000";
             _BackgroundColor = "Transparent";
             _Alignment = TextAlignment.Center;
+            _Anchor = TextAnchor.Center;
             _x = Utility.EmuToPixels(1349828);
             _y = Utility.EmuToPixels(1999619);
             _Width = Utility.EmuToPixels(6000000);
             _Height = Utility.EmuToPixels(2000000);
             _TextList = null;
             Populate_Facade();
-        }
+            }
         /// <summary>
         /// Method to update text shape.
         /// </summary>
-        public void Update ()
-        {
+        public void Update()
+            {
             Populate_Facade();
             _Facade.UpdateShape();
 
-        }
+            }
         /// <summary>
         /// Method to populate the fields of respective facade.
         /// </summary>
-        private void Populate_Facade ()
-        {
+        private void Populate_Facade()
+            {
             _Facade.Text = _Text;
             _Facade.FontSize = _FontSize;
             _Facade.Alignment = _Alignment;
+            _Facade.Anchor = _Anchor;
             _Facade.TextColor = _TextColor;
             _Facade.BackgroundColor = _BackgroundColor;
             _Facade.FontFamily = _FontFamily;
@@ -129,24 +136,25 @@ namespace FileFormat.Slides
             _Facade.Width = Utility.PixelsToEmu(_Width);
             _Facade.Height = Utility.PixelsToEmu(_Height);
             _Facade.TextList = _TextList?.Facade;
-        }
+            }
         /// <summary>
         /// Method for getting the list of text shapes.
         /// </summary>
         /// <param name="textShapeFacades">An object of TextShapeFacade.</param>
         /// <returns></returns>
-        public static List<TextShape> GetTextShapes (List<TextShapeFacade> textShapeFacades)
-        {
+        public static List<TextShape> GetTextShapes(List<TextShapeFacade> textShapeFacades)
+            {
             List<TextShape> textShapes = new List<TextShape>();
             try
-            {
-                foreach (var facade in textShapeFacades)
                 {
-                    TextShape textShape = new TextShape
+                foreach (var facade in textShapeFacades)
                     {
+                    TextShape textShape = new TextShape
+                        {
                         Text = facade.Text,
                         FontSize = facade.FontSize,
                         Alignment = facade.Alignment,
+                        Anchor = facade.Anchor,
                         FontFamily = facade.FontFamily,
                         TextColor = facade.TextColor,
                         BackgroundColor = facade.BackgroundColor,
@@ -157,29 +165,29 @@ namespace FileFormat.Slides
                         Facade = facade,
                         TextList = GetTextList(facade?.TextList),
                         ShapeIndex = facade.ShapeIndex
-                    };
+                        };
 
                     textShapes.Add(textShape);
 
+                    }
                 }
-            }
             catch (Exception ex)
-            {
+                {
                 string errorMessage = Common.FileFormatException.ConstructMessage(ex, "Getting Text Shapes");
                 throw new Common.FileFormatException(errorMessage, ex);
-            }
+                }
 
             return textShapes;
-        }
+            }
         /// <summary>
         /// This method is used to get the StyledList from a text shape
         /// </summary>
         /// <param name="facade"></param>
         /// <returns></returns>
-        private static StyledList GetTextList (ListFacade facade)
-        {
-            if (facade != null)
+        private static StyledList GetTextList(ListFacade facade)
             {
+            if (facade != null)
+                {
                 StyledList list = new StyledList(facade.ListType);
                 list.ListItems = facade.ListItems;
                 list.TextColor = facade.TextColor;
@@ -187,15 +195,15 @@ namespace FileFormat.Slides
                 list.FontSize = facade.FontSize;
                 list.Facade = facade;
                 return list;
-            }
+                }
             return null;
-        }
+            }
         /// <summary>
         /// Method to remove the textshape of a slide.
         /// </summary>
-        public void Remove ()
-        {
+        public void Remove()
+            {
             _Facade.RemoveShape(this.Facade.TextBoxShape);
+            }
         }
     }
-}
